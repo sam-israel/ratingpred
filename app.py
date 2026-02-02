@@ -27,8 +27,16 @@ uploaded = st.file_uploader(label="Data for predictions", type=["csv"])
 
 if uploaded is not None:
   data = pd.read_csv(uploaded)
-  st.write("Data upload successfull, preview 5 lines from beginning, and 5 lines from end:")
-  st.dataframe(data.head())
-  st.dataframe(data.tail())
+  st.write("Data upload successfull. Preview: ")
+  data_preview = pd.concat([data.head(), data.tail()], axis=0)
+
+  y_pred = model.predict(data)
+
+  st.write("Prediction successful! Preview: ")
+  y_preview = pd.concat([y_pred.head(), y_pred.tail()], axis=0)
+  y_preview = pd.concat([y_preview, data_preview], axis=1)
+  st.dataframe(y_preview)
+
+
 
 
