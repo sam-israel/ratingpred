@@ -1,5 +1,6 @@
 MODEL_LOCATION = "models/model.joblib"
 TARGET_COL = "review_scores_rating"
+CITY_COL = "city"
 
 import io
 import os
@@ -8,12 +9,32 @@ import pandas as pd
 import numpy as np
 import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.preprocessing import OrdinalEncoder
+from capston_polaris_v4 import clean_airbnb_schema, drop_redunt_cols, transformation
 
 def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
     rmse = float(np.sqrt(mean_squared_error(y_true, y_pred)))
     mae = float(mean_absolute_error(y_true, y_pred))
     r2 = float(r2_score(y_true, y_pred))
     return {"rmse": rmse, "mae": mae, "r2": r2, "n": int(len(y_true))}
+
+
+
+
+def preprocess(df):
+    
+    df.insert(0,"city",0) # Insert dummy variable for city - in our training set we had city with values 0/1
+
+    # Correct data types
+    clean_airbnb_schema(df, inplace=True)
+
+    # Drop redundant columns
+    df = drop_redunt_cols(df)
+
+    # Feature engeneering
+    df = transformation (df, y_col = None)
+
+    return df
 
 @st.cache_resource
 def load_model():
@@ -45,12 +66,15 @@ if uploaded is not None:
   else:
     y = None
 
+
+  st.write("Preprocessing data...")
+  data = preprocess(data)
+
+  
   y_pred = model.predict(data)
   y_pred = pd.Series(y_pred, name = f"{TARGET_COL}_PREDICTED")
 
   st.write("Prediction successful! ")
-#  y_preview = pd.concat([y_pred.head(), y_pred.tail()], axis=0)
-#  y_preview = pd.concat([y_preview, data_preview], axis=1)
 
   data_with_pred = pd.concat([y_pred, data], axis=1)
   st.dataframe(data_with_pred, hide_index=True)
