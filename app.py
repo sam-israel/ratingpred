@@ -67,9 +67,11 @@ if uploaded is not None:
     y = None
 
 
-  st.write("Preprocessing data...")
-  data = preprocess(data)
-
+  if data.columns.str.contains("_isNA").sum() > 0: # Quick hack to determine if the data was preprocessed according to our magical recipe
+    st.write("Data is already preprocessed!")
+  else:
+    st.write("Preprocessing data...")
+    data = preprocess(data)
   
   y_pred = model.predict(data)
   y_pred = pd.Series(y_pred, name = f"{TARGET_COL}_PREDICTED")
@@ -80,12 +82,16 @@ if uploaded is not None:
   st.dataframe(data_with_pred, hide_index=True)
 
   if y is not None:
+    
+    
+    # Can calculate metrics only in cases where the original Y value was not missing
+    y_na_idx = y.isna()
+    y = y[~y_na_idx]
+    y_pred = y_pred[~y_na_idx]
+    
+
     metric = compute_metrics(y_true = y, y_pred=y_pred)
     
     st.write("Model metrics:")
     st.write(metric)
     
-    naive_y_pred = np.full_like(y_pred, fill_value = 4.75)
-    naive_metric = compute_metrics(y_true = y, y_pred = naive_y_pred)
-    st.write("Naive model metrics:")
-    st.write(naive_metric)
