@@ -78,8 +78,8 @@ if uploaded is not None:
 
   st.write("Prediction successful! ")
 
-  data_with_pred = pd.concat([y_pred, data], axis=1)
-  st.dataframe(data_with_pred, hide_index=True)
+  #data_with_pred = pd.concat([y_pred, data], axis=1)
+  st.dataframe(Y_pred, hide_index=True)
 
   if y is not None:
     
