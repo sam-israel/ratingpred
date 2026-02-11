@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 DEFAULT_DATASET1_LOC = 'https://raw.githubusercontent.com/sam-israel/general/refs/heads/master/listings%20NYC.csv'
 DEFAULT_DATASET2_LOC = 'https://raw.githubusercontent.com/sam-israel/general/refs/heads/master/listings%20LA.csv'
 DEFAULT_OUTPUT_LOC = "data"
+MISSING_VALUE_REPLACE = 4
 Y_COL = "review_scores_rating"
 
 
@@ -160,14 +161,14 @@ def transformation(arr, y_col = Y_COL):
 
 
 def replace_y_null(df, y_col = Y_COL):
-    """ Replace missing values with 3.5 value - extremely low value"""
+    """ Replace missing values with constant value - extremely low value"""
     #y = df.loc[:,Y_COL]
     
     #mask = y.isna()
     
     #df.loc[mask,:] = 3.5
 
-    df[Y_COL].fillna(3.5, inplace=True)
+    df[Y_COL].fillna(MISSING_VALUE_REPLACE, inplace=True)
 
     return df
 
