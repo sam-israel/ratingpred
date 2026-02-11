@@ -143,11 +143,13 @@ def transformation(arr, y_col = Y_COL):
 #    X[i + "_isOutlier"] = (~X[i].isna()) &  (X[i] > q_high) # Make an indicator column high numeric values
 
   for i in X.select_dtypes(include=["string", "object"]).columns:  # Convert each text into its length
-    X[i] = X[i].apply(lambda x: 0 if pd.isna(x) else len(x))
+    X[i] = X[i].apply(lambda x: 0 if pd.isna(x) else len(x.split(" ")))
 
   for i in X.select_dtypes(include=["datetime"]): # Convert each date into the number of days since 1/1/2000
     t0 = pd.Timestamp("2000-01-01")
     X[i] = (X[i] - t0).dt.days
+
+  X["from_first_to_last"] = X["last_review"].astype("Int32") - X["first_review"].astype("Int32")
 
   for i in X.select_dtypes(include=["bool"]).columns: # Convert bool to Int (technical)
       X[i] = X[i].astype("Int32")

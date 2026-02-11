@@ -1,5 +1,5 @@
 #MODEL_LOCATION = "models/model.joblib"
-MODEL_LOCATION = "models/model_imputeMissingY.joblib"
+MODEL_LOCATION = "models/model_imputeMissingY_LastFirstReview.joblib"
 TARGET_COL = "review_scores_rating"
 
 import io
