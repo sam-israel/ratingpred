@@ -1,5 +1,5 @@
 #MODEL_LOCATION = "models/model.joblib"
-MODEL_LOCATION = "models/model_imputeMissingY.joblib"
+MODEL_LOCATION = "models/model_imputeMissingY_countWord.joblib"
 TARGET_COL = "review_scores_rating"
 CITY_COL = "city"
 
