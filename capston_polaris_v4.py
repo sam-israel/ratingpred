@@ -143,7 +143,7 @@ def transformation(arr, y_col = Y_COL):
 #    X[i + "_isOutlier"] = (~X[i].isna()) &  (X[i] > q_high) # Make an indicator column high numeric values
 
   for i in X.select_dtypes(include=["string", "object"]).columns:  # Convert each text into its length
-    X[i] = X[i].apply(lambda x: 0 if pd.isna(x) else len(x.split(" ")))
+    X[i] = X[i].apply(lambda x: 0 if pd.isna(x) else len(x))
 
   for i in X.select_dtypes(include=["datetime"]): # Convert each date into the number of days since 1/1/2000
     t0 = pd.Timestamp("2000-01-01")
