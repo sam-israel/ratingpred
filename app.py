@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 #MODEL_LOCATION = "models/model.joblib"
 MODEL_LOCATION = "models/model_imputeMissingY_countWord.joblib"
+=======
+MODEL_LOCATION = "models/model.joblib"
+>>>>>>> parent of 28b6554 (Added another model. That model model_imputeMissingY.joblib was trained when instead of removing all null Y values, I have imputed them with 3.5 - thinking that these *are* informative. Also I have changed the capston_polaris_v4.py so that it preprocesses slightly differently  - isOutlier is not needed, and isNA is not *always* needed)
 TARGET_COL = "review_scores_rating"
 CITY_COL = "city"
 
@@ -24,6 +28,8 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
 
 def preprocess(df):
     
+    df.insert(0,"city",0) # Insert dummy variable for city - in our training set we had city with values 0/1
+
     # Correct data types
     clean_airbnb_schema(df, inplace=True)
 
