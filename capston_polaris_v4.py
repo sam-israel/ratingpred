@@ -149,8 +149,6 @@ def transformation(arr, y_col = Y_COL):
     t0 = pd.Timestamp("2000-01-01")
     X[i] = (X[i] - t0).dt.days
 
-  X["from_first_to_last"] = X["last_review"].astype("Int32") - X["first_review"].astype("Int32")
-
   for i in X.select_dtypes(include=["bool"]).columns: # Convert bool to Int (technical)
       X[i] = X[i].astype("Int32")
 
