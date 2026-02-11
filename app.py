@@ -1,4 +1,5 @@
-MODEL_LOCATION = "models/model.joblib"
+#MODEL_LOCATION = "models/model.joblib"
+MODEL_LOCATION = "models/model_imputeMissingY.joblib"
 TARGET_COL = "review_scores_rating"
 CITY_COL = "city"
 
@@ -23,8 +24,6 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
 
 def preprocess(df):
     
-    df.insert(0,"city",0) # Insert dummy variable for city - in our training set we had city with values 0/1
-
     # Correct data types
     clean_airbnb_schema(df, inplace=True)
 

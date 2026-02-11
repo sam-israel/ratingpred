@@ -104,12 +104,10 @@ def clean_airbnb_schema(
     return df
 
 
-def concat_datasets(df1, df2, df1_citycode=1, df2_citycode=0):
+def concat_datasets(df1, df2):
     "Concat two datasets"
-    df1.insert(0, "city", df1_citycode)
-    df2.insert(0, "city", df2_citycode)
 
-    return pd.concat([df1, df2], ignore_index=True, sort=False)
+    return pd.concat([df1, df2], ignore_index=True, sort=False, axis=0)
 
 
 
@@ -121,11 +119,12 @@ def drop_dup_rows(df):
 
 def drop_redunt_cols(df):
     """Drop  redundant columns"""
-    return df.drop(  columns= [ "minimum_minimum_nights",
-    "maximum_minimum_nights",
-     "minimum_maximum_nights",
-    "maximum_maximum_nights","minimum_nights_avg_ntm",  "maximum_nights_avg_ntm" ])
+    df_copy = df.copy()
+    cols_to_drop =  [ "minimum_minimum_nights", "maximum_minimum_nights", "minimum_maximum_nights", "maximum_maximum_nights","minimum_nights_avg_ntm",  "maximum_nights_avg_ntm" ]
+      
+    df_copy.drop(cols_to_drop, axis=1, inplace=True)
 
+    return df_copy
 
 def transformation(arr, y_col = Y_COL):
   """Feature engeneering"""
@@ -136,10 +135,12 @@ def transformation(arr, y_col = Y_COL):
     y = arr.loc[:,y_col]
     X = arr.copy().drop(columns=y_col)
 
-  for i in X.select_dtypes("number").columns:
-    X[i + "_isNA"] = X[i].isna() # Make an indicator column for NA values in numeric columns
-    q_high = arr[i].quantile(0.995)
-    X[i + "_isOutlier"] = (~X[i].isna()) &  (X[i] > q_high) # Make an indicator column high numeric values
+# for i in X.select_dtypes("number").columns:
+#    X[i + "_isNA"] = X[i].isna() # Make an indicator column for NA values in numeric columns
+
+
+#    q_high = arr[i].quantile(0.995)
+#    X[i + "_isOutlier"] = (~X[i].isna()) &  (X[i] > q_high) # Make an indicator column high numeric values
 
   for i in X.select_dtypes(include=["string", "object"]).columns:  # Convert each text into its length
     X[i] = X[i].apply(lambda x: 0 if pd.isna(x) else len(x))
@@ -155,6 +156,20 @@ def transformation(arr, y_col = Y_COL):
     return X
   else:  
     return pd.concat([X,y], axis=1)
+
+
+
+def replace_y_null(df, y_col = Y_COL):
+    """ Replace missing values with 3.5 value - extremely low value"""
+    #y = df.loc[:,Y_COL]
+    
+    #mask = y.isna()
+    
+    #df.loc[mask,:] = 3.5
+
+    df[Y_COL].fillna(3.5, inplace=True)
+
+    return df
 
 
 
