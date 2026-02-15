@@ -1,5 +1,6 @@
 #MODEL_LOCATION = "models/model.joblib"
-MODEL_LOCATION = "models/model_imputeMissingY_as4.joblib"
+#MODEL_LOCATION = "models/model_imputeMissingY_as4.joblib"
+MODEL_LOCATION = "models/random_forest.joblib"
 TARGET_COL = "review_scores_rating"
 
 import io
