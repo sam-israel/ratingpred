@@ -11,29 +11,9 @@ import numpy as np
 import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.preprocessing import OrdinalEncoder
-from capston_polaris_v4 import clean_airbnb_schema, drop_redunt_cols, transformation
+from capston_polaris_v4 import preprocess
+from capston_polaris_v4 import compute_metrics
 
-def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    rmse = float(np.sqrt(mean_squared_error(y_true, y_pred)))
-    mae = float(mean_absolute_error(y_true, y_pred))
-    r2 = float(r2_score(y_true, y_pred))
-    return {"rmse": rmse, "mae": mae, "r2": r2, "n": int(len(y_true))}
-
-
-
-
-def preprocess(df):
-    
-    # Correct data types
-    clean_airbnb_schema(df, inplace=True)
-
-    # Drop redundant columns
-    df = drop_redunt_cols(df)
-
-    # Feature engeneering
-    df = transformation (df, y_col = None)
-
-    return df
 
 @st.cache_resource
 def load_model():
@@ -66,11 +46,11 @@ if uploaded is not None:
     y = None
 
 
-  if data.columns.str.contains("_isNA").sum() > 0: # Quick hack to determine if the data was preprocessed according to our magical recipe
+  if "central" in data.columns: # Quick hack to determine if the data was preprocessed according to our magical recipe
     st.write("Data is already preprocessed!")
   else:
     st.write("Preprocessing data...")
-    data = preprocess(data)
+    data = preprocess(data,None)
   
   y_pred = model.predict(data)
   y_pred = pd.Series(y_pred, name = f"{TARGET_COL}_PREDICTED")
