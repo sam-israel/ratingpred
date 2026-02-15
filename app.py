@@ -33,7 +33,7 @@ uploaded = st.file_uploader(label="Data for predictions", type=["csv"])
 
 
 if uploaded is not None:
-  data = pd.read_csv(uploaded, engine="python")
+  data = pd.read_csv(uploaded)
   st.write("Data upload successfull. Preview: ")
   data_preview = pd.concat([data.head(), data.tail()], axis=0)
   st.dataframe(data_preview)
@@ -50,7 +50,7 @@ if uploaded is not None:
     st.write("Data is already preprocessed!")
   else:
     st.write("Preprocessing data...")
-    data = preprocess(data,drop_duplicate_rows=False)
+    data = preprocess(data,y_col=None,drop_duplicate_rows=False)
   
   y_pred = model.predict(data)
   y_pred = pd.Series(y_pred, name = f"{TARGET_COL}_PREDICTED")
