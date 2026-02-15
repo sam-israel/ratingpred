@@ -33,7 +33,7 @@ uploaded = st.file_uploader(label="Data for predictions", type=["csv"])
 
 
 if uploaded is not None:
-  data = pd.read_csv(uploaded)
+  data = pd.read_csv(uploaded, engine="python")
   st.write("Data upload successfull. Preview: ")
   data_preview = pd.concat([data.head(), data.tail()], axis=0)
   st.dataframe(data_preview)
@@ -61,15 +61,11 @@ if uploaded is not None:
   st.dataframe(y_pred, hide_index=True)
 
   if y is not None:
-    
-    
+       
     # Can calculate metrics only in cases where the original Y value was not missing
     y_na_idx = y.isna()
-    y = y[~y_na_idx]
-    y_pred = y_pred[~y_na_idx]
     
-
-    metric = compute_metrics(y_true = y, y_pred=y_pred)
+    metric = compute_metrics(y_true = y[~y_na_idx], y_pred=y_pred[~y_na_idx])
     
     st.write("Model metrics:")
     st.write(metric)
