@@ -61,7 +61,7 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
 
 
 
-def preprocess(df:DataFrame, y_col, use_genAI=False, verbose=True):
+def preprocess(df:DataFrame, y_col, drop_duplicate_rows=True, use_genAI=False, verbose=True):
     if verbose:
       print(f"Initial rows number {df.shape[0]}")
 
@@ -72,10 +72,10 @@ def preprocess(df:DataFrame, y_col, use_genAI=False, verbose=True):
       print(f"After correcting data types: {df.shape[0]}")
     
     # Drop duplicate rows
-    df= drop_dup_rows(df)
-
-    if verbose:
-      print(f"After cleaning duplicate rows : {df.shape[0]}")
+    if drop_duplicate_rows:
+      df= drop_dup_rows(df)
+      if verbose:
+        print(f"After cleaning duplicate rows : {df.shape[0]}")
 
     # Drop rows with null y values
     if y_col is not None:

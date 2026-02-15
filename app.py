@@ -50,7 +50,7 @@ if uploaded is not None:
     st.write("Data is already preprocessed!")
   else:
     st.write("Preprocessing data...")
-    data = preprocess(data,None)
+    data = preprocess(data,drop_duplicate_rows=False)
   
   y_pred = model.predict(data)
   y_pred = pd.Series(y_pred, name = f"{TARGET_COL}_PREDICTED")
