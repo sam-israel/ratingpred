@@ -278,8 +278,9 @@ def calc_central_score(df):
     # calc cosine similarity in [-1, 1] and grade 1-10
     S = cosine_similarity(emb_texts, emb_central)
     sim = S.max(axis=1)
-    df["central"] = np.clip(1 + 9 * ((sim + 1) / 2), 1, 10).round(2)
-#    print (print(df.loc[:20, ["description", "central"]]))
+#    df["central"] = np.clip(1 + 9 * ((sim + 1) / 2), 1, 10).round(2)
+    df["central"] = (1+9 * (sim-sim.min() ) / (sim.max() - sim.min() )).round(1)
+    print (print(df.loc[:20, ["description", "central"]]))
     return df
 
 
