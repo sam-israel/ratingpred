@@ -17,6 +17,7 @@ DEFAULT_DATASET1_LOC = 'https://raw.githubusercontent.com/sam-israel/general/ref
 DEFAULT_DATASET2_LOC = 'https://raw.githubusercontent.com/sam-israel/general/refs/heads/master/listings%20LA.csv'
 DEFAULT_DATASET3_LOC = 'https://github.com/sam-israel/general/raw/refs/heads/master/TEST_SET_newcity1.csv'
 DEFAULT_OUTPUT_LOC = "data"
+SAMPLE_WEIGHT_COL = "sample_weight"
 WANDB_API_KEY = os.getenv('WANDB_API_KEY', default="")
 NEBIUS_API_KEY = os.getenv("NEBIUS_API_KEY", default="")
 MODEL="openai/gpt-oss-20b"   #meta-llama/Meta-Llama-3.1-8B-Instruct-fast"
@@ -230,6 +231,9 @@ def transformation(arr, y_col):
 
   for i in X.select_dtypes(include=["bool"]).columns: # Convert bool to Int (technical)
       X[i] = X[i].astype("Int32")
+
+  # Sample weights are set to be proportional to the length of the dataset
+  X[SAMPLE_WEIGHT_COL] = 1/X.shape[0]
 
   if y_col is None:
     return X

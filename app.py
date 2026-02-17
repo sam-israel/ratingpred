@@ -11,8 +11,8 @@ import numpy as np
 import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.preprocessing import OrdinalEncoder
-from capston_polaris_v4 import preprocess
-from capston_polaris_v4 import compute_metrics
+from capston_polaris_v4 import *
+#from capston_polaris_v4 import compute_metrics
 
 
 @st.cache_resource
@@ -51,7 +51,9 @@ if uploaded is not None:
   else:
     st.write("Preprocessing data...")
     data = preprocess(data,y_col=None,drop_duplicate_rows=False)
-  
+
+  data = data.drop(columns=[SAMPLE_WEIGHT_COL]) if SAMPLE_WEIGHT_COL in data.columns else X # we save the sample weights column along, but we do not want to predict based on it.
+
   y_pred = model.predict(data)
   y_pred = pd.Series(y_pred, name = f"{TARGET_COL}_PREDICTED")
 
